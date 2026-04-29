@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Farito</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-1: #2966A3;
+  --bg-2: #F5F7F7;
+  --bg-3: #FFFFFF;
+  --accent-2: #1F4F80;
+  --accent-3: #D8CDB3;
+  --heading: #1A1A1A;
+  --subhead: #1F4F80;
+  --paragraph-1: #333333;
+  --overlay: #FFFFFF;
+  --sidebar-w: 370px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg-2);
+  color: var(--paragraph-1);
+}
+
+/* ── LAYOUT ── */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: linear-gradient(160deg, var(--bg-1) 0%, var(--accent-2) 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 28px 30px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+/* decoración de fondo sidebar */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 260px; height: 260px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  pointer-events: none;
+}
+.sidebar::after {
+  content: '';
+  position: absolute;
+  bottom: 60px; left: -60px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  pointer-events: none;
+}
+
+/* NAV dentro del sidebar */
+.sidebar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 44px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--overlay);
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/*.logo-icon {
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}*/
+
+.logo-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.btn-cart {
+  padding: 9px 16px;
+  border: 1.5px solid var(--accent-3);
+  background: transparent;
+  color: var(--accent-3);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-cart:hover { background: var(--accent-3); color: var(--accent-2); }
+
+/* HEADLINE */
+.sidebar-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--overlay);
+  margin-bottom: 14px;
+}
+
+.sidebar-headline span {
+  color: var(--accent-3);
+}
+
+.sidebar-sub {
+  font-size: 14px;
+  color: rgba(216,205,179,0.8);
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+/* MÓDULOS / OFFERINGS */
+.offerings-label {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 14px;
+}
+
+.modules {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.module-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  color: var(--overlay);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  text-align: left;
+}
+.module-btn:hover {
+  background: rgba(255,255,255,0.18);
+  border-color: rgba(255,255,255,0.25);
+}
+
+.module-icon {
+  width: 34px; height: 34px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+/* FOOTER LINKS sidebar */
+.sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.sidebar-footer a {
+  color: rgba(216,205,179,0.7);
+  font-size: 12px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.sidebar-footer a:hover { color: var(--accent-3); }
+
+/* ── CONTENIDO PRINCIPAL ── */
+.content {
+  margin-left: var(--sidebar-w);
+  width: calc(100% - var(--sidebar-w));
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── MAIN ── */
+.main {
+  flex: 1;
+  padding: 48px 52px;
+  background: var(--bg-2);
+}
+
+/* HERO con imagen full */
+.hero {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  height: 360px;
+  background: #0d2a45;
+}
+
+.hero-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.65;
+  display: block;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(31,79,128,0.7) 0%, transparent 60%);
+}
+
+.hero-text {
+  position: absolute;
+  bottom: 40px; left: 44px;
+  color: white;
+  max-width: 420px;
+}
+
+.hero-text h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 18px;
+}
+
+.hero-cta {
+  display: flex; gap: 12px; flex-wrap: wrap;
+}
+
+.btn-primary {
+  padding: 11px 22px;
+  background: var(--accent-3);
+  color: var(--accent-2);
+  border: none;
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.88; }
+
+.btn-secondary {
+  padding: 11px 22px;
+  background: transparent;
+  color: white;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.btn-secondary:hover { border-color: white; }
+
+/* GRID DE CARDS */
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--subhead);
+  margin: 42px 0 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.card {
+  background: var(--bg-3);
+  border-radius: 14px;
+  padding: 26px 24px;
+  border: 1px solid rgba(41,102,163,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(41,102,163,0.12);
+}
+
+.card-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--bg-1), var(--accent-2));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  color: var(--heading);
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 13px;
+  color: #777;
+  line-height: 1.55;
+  font-weight: 300;
+}
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--bg-3);
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 40px 52px 32px;
+  gap: 40px;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-logo-mark {
+  font-size: 28px;
+  opacity: 0.3;
+  color: var(--bg-1);
+}
+
+.footer-brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--heading);
+}
+
+.footer-tagline {
+  font-size: 12px;
+  color: #999;
+  font-weight: 300;
+}
+
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: right;
+}
+
+.footer-contact-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #999;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.footer-contact a, .footer-contact span {
+  font-size: 13px;
+  color: var(--paragraph-1);
+  text-decoration: none;
+  display: block;
+  transition: color 0.2s;
+}
+.footer-contact a:hover { color: var(--bg-1); }
+
+.footer-bottom {
+  border-top: 1px solid rgba(0,0,0,0.06);
+  padding: 18px 52px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-bottom-left {
+  font-size: 12px;
+  color: #bbb;
+  font-weight: 300;
+}
+
+.footer-bottom-right a {
+  font-size: 12px;
+  color: #bbb;
+  text-decoration: none;
+  margin-left: 20px;
+  transition: color 0.2s;
+}
+.footer-bottom-right a:hover { color: var(--bg-1); }
+
+/* WHATSAPP */
+.whatsapp {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: #25D366;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 16px rgba(37,211,102,0.4);
+  cursor: pointer;
+  z-index: 200;
+  transition: transform 0.2s;
+  text-decoration: none;
+}
+.whatsapp:hover { transform: scale(1.1); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  .layout { flex-direction: column; }
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+
+  .content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .main { padding: 30px 20px; }
+
+  .hero { height: 280px; }
+
+  .grid { grid-template-columns: 1fr; }
+
+  .footer-top { flex-direction: column; padding: 28px 20px; }
+  .footer-contact { text-align: left; }
+  .footer-bottom { flex-direction: column; gap: 10px; padding: 16px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  <header class="sidebar">
+
+   <nav class="sidebar-nav">
+  <div class="logo">
+    <img src="logoElFarito.png" class="logo-icon" alt="El Farito">
+    <span>El Farito</span>
+  </div>
+
+  <button class="btn-cart">Ver carrito</button>
+</nav>
+
+    <div>
+      <h1 class="sidebar-headline">
+        Pescado siempre fresco,<br>
+        del mar a <span>la mesa</span>
+      </h1>
+      <p class="sidebar-sub">Distribuidora de mariscos del Pacífico</p>
+    </div>
+
+    <p class="offerings-label">Nuestros servicios</p>
+
+    <div class="modules">
+      <button class="module-btn">
+        <span class="module-icon">🦐</span>
+        Ver menú
+      </button>
+      <button class="module-btn">
+        <span class="module-icon">📦</span>
+        Encargar producto
+      </button>
+      <button class="module-btn">
+        <span class="module-icon">🏷️</span>
+        Promociones
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <a href="#">Contacto</a>
+      <a href="#">Redes sociales</a>
+      <a href="#">Dirección</a>
+      <a href="#">Términos legales</a>
+    </div>
+
+  </header>
+
+  <!-- ══ CONTENIDO ══ -->
+  <div class="content">
+
+    <main class="main">
+
+      <!-- HERO -->
+      <div class="hero">
+        <img
+          class="hero-img"
+          src="https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=1200&auto=format&fit=crop"
+          alt="Mariscos frescos">
+        <div class="hero-overlay"></div>
+        <div class="hero-text">
+          <h2>Descubre El Farito y<br>pide directo desde tu teléfono.</h2>
+          <div class="hero-cta">
+            <button class="btn-primary">Comprar ahora</button>
+            <button class="btn-secondary">Ver catálogo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRID -->
+      <p class="section-label">Lo que ofrecemos</p>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-icon">🐠</div>
+          <h3>Pescado fresco</h3>
+          <p>Directo del Pacífico costarricense, capturado y entregado el mismo día.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🦞</div>
+          <h3>Mariscos</h3>
+          <p>Camarones, calamares, pulpo y más. Selección premium de temporada.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏷️</div>
+          <h3>Promociones</h3>
+          <p>Ofertas semanales y descuentos para pedidos al por mayor.</p>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ══ FOOTER ══ -->
+    <footer class="footer">
+
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo-mark">⚓</div>
+          <span class="footer-brand-name">El Farito</span>
+          <span class="footer-tagline">Distribuidora de mariscos del Pacífico</span>
+        </div>
+
+        <div class="footer-contact">
+          <span class="footer-contact-label">Contacto</span>
+          <span>ventas_elfarito@gmail.com</span>
+          <a href="#">Instagram</a>
+          <a href="#">Facebook</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span class="footer-bottom-left">© 2025 El Farito. Todos los derechos reservados.</span>
+        <div class="footer-bottom-right">
+          <a href="#">Términos y condiciones</a>
+          <a href="#">Privacidad</a>
+        </div>
+      </div>
+
+    </footer>
+
+  </div>
+</div>
+
+<a class="whatsapp" href="#">💬</a>
+
+</body>
+</html>
